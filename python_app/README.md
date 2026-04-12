@@ -8,7 +8,7 @@ python -m python_demo.sample
 ```
 
 ## To run your application on Docker
-- You should be in the parent in this folder `python_app` of this repository then use below command to build the docker image.
+- You should be present in this folder `python_app` of this repository, then use below command to build the docker image.
 
 ```
 docker build -t docker-demo .
