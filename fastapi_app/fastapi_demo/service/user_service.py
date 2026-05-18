@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 class ItemService:
     def createUser(self, signupDetails: SignupDetails):
         log.info(f'Adding user with email {signupDetails.email}')
-        mock_db.append(signup_request)
+        mock_db.append(signupDetails)
         log.info(f'Added user with email {signupDetails.email}')
 
     def getAllUsers(self):

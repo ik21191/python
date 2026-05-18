@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{title}}</title>
+    <!-- Linking CSS using url_for -->
+    <link href="{{ url_for('static', path='/css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <h1>Welcome to FastAPI</h1>
+    <p>This page is rendered using Jinja2 templates.</p>
+    <a href="/signup">Sign Up</a>
+</body>
+</html>

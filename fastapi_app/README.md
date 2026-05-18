@@ -2,12 +2,13 @@
 # FastApi Demo
 **Note-** While creating folder, do not use hyphen`-` in folder name, instead you can use underscore `_` . 
 
+## prerequisites
+- **python --version** `Python 3.13.12`
+
 ## Step to run application locally
 **Note:-** I am using `Docker Desktop` while developing these demo applications, so you should install `Docker Desktop` to test these applications.
 
 You should be present in the `fastapi_app` folder of this repository, then you can run below command to run your application.
-
-- **python --version** `Python 3.13.12`
 
 ```
 python -m uvicorn main:app --reload

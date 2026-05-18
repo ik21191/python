@@ -1,16 +1,22 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends, Form
 from fastapi_demo.models.user_models import SignupDetails
 from fastapi_demo.service.user_service import user_service
 import logging
-from typing import List
+from typing import List, Annotated
 
 log = logging.getLogger(__name__)
 
 #Define prefix of the controller and grouping all rest end points in user-actions
 router = APIRouter(prefix="/user", tags=["user-actions"])
 
+@router.post("/add-user2")
+async def addUser2(data: Annotated[SignupDetails, Form()]):
+    log.info(f'Signing user {signup_request.first_name} with email {signup_request.email}.....')
+    return data
+
+
 @router.post("/add-user")
-async def addUser(signup_request: SignupDetails):
+async def addUser(signup_request: Annotated[SignupDetails, Form()]):
     log.info(f'Signing user {signup_request.first_name} with email {signup_request.email}.....')
     try:
         if isUserExists(signup_request):
@@ -58,6 +64,7 @@ async def deleteUserByEmail(email:str):
             "status":"Deleted"}
 
 def isUserExists(userDetails: SignupDetails):
-    for user in users:
-        if userDetails.email == user.email:
-            return True
+    #for user in user_service.mock_db:
+     #   if userDetails.email == user.email:
+            
+    return False
