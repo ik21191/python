@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, Form
+from fastapi import APIRouter, HTTPException, Depends, Form, Request
 from fastapi_demo.models.user_models import SignupDetails
 from fastapi_demo.service.user_service import user_service
 import logging
@@ -9,17 +9,25 @@ log = logging.getLogger(__name__)
 #Define prefix of the controller and grouping all rest end points in user-actions
 router = APIRouter(prefix="/user", tags=["user-actions"])
 
-@router.post("/add-user2")
-async def addUser2(data: Annotated[SignupDetails, Form()]):
-    log.info(f'Signing user {signup_request.first_name} with email {signup_request.email}.....')
-    return data
-
+# Reusable dependency to handle either format
+async def get_body(request: Request) -> dict:
+    content_type = request.headers.get("Content-Type", "")
+    
+    if "application/json" in content_type:
+        return await request.json()
+    elif "application/x-www-form-urlencoded" in content_type:
+        form_data = await request.form()
+        return dict(form_data)
+    else:
+        raise HTTPException(status_code=400, detail="Invalid Content-Type")
 
 @router.post("/add-user")
-async def addUser(signup_request: Annotated[SignupDetails, Form()]):
+async def addUser(signup_request: SignupDetails):
+    
     log.info(f'Signing user {signup_request.first_name} with email {signup_request.email}.....')
     try:
-        if isUserExists(signup_request):
+        user = user_service.findUserByEmail(signup_request.email)
+        if user is not None:
             raise Exception("User already exists")
     except Exception as e:
         log.error(f"user already exists {signup_request.email}")
@@ -62,9 +70,3 @@ async def deleteUserByEmail(email:str):
 
     return {"user": f'User with email {email}',
             "status":"Deleted"}
-
-def isUserExists(userDetails: SignupDetails):
-    #for user in user_service.mock_db:
-     #   if userDetails.email == user.email:
-            
-    return False

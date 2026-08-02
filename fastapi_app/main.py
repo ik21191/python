@@ -1,7 +1,9 @@
-from fastapi import FastAPI, Request, status
+from fastapi import FastAPI, Request, status, WebSocket, WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from fastapi_demo.config import log_config
+from fastapi_demo.manager.websocket_manager import websocket_manager
 import logging
 from fastapi_demo.rest_controllers import user_controller
 from fastapi.responses import HTMLResponse
@@ -20,6 +22,32 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 app.include_router(user_controller.router)
+
+# Configure CORS to allow your frontend local development server
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # Vite's default port
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# WebSocket endpoint start
+@app.websocket("/connect")
+async def websocket_endpoint(websocket: WebSocket):
+    log.info(f'WebSocket endpoint called: {websocket}')
+    await websocket_manager.connect(websocket)
+    try:
+        while True:
+            # Wait for data from the client
+            data = await websocket.receive_text()
+            # Broadcast it out to all active clients
+            await websocket_manager.broadcast(data)
+    except WebSocketDisconnect:
+        log.error(f'WebSocket endpoint disconnected: {websocket}')
+        websocket_manager.disconnect(websocket)
+
+# WebSocket endpoint end
 
 #Global exception handler
 @app.exception_handler(RequestValidationError)
