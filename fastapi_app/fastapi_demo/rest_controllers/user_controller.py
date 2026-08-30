@@ -54,10 +54,14 @@ async def deleteUserByEmail(email:str):
     if not is_user_deleted:
         raise HTTPException(status_code=404, detail=f"User with email {email} not found.")
 
-    return {"user": f'User with email {email}',
-            "status":"Deleted"}
+    return {"user": f'User with email {email}', "status":"Deleted"}
 
 def isUserExists(userDetails: SignupDetails):
-    for user in users:
-        if userDetails.email == user.email:
-            return True
+    log.info(f'Checking if user with email {userDetails.email} already exists......')
+    user = user_service.findUserByEmail(userDetails.email)
+    if user is not None:
+        log.error(f'User with email {userDetails.email} already exists.')
+        return True
+    else:
+        log.info(f'User with email {userDetails.email} does not exist.')
+        return False

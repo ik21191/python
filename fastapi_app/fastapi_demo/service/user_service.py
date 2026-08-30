@@ -2,6 +2,7 @@ from fastapi_demo.models.user_models import SignupDetails
 import logging
 
 # Simple in-memory storage for this example
+#Below mock is list of dictionaries where each dictionary represents a user with their details
 mock_db = [
    {"first_name":"Imran", "last_name": "Khan", "email":"imran@gmail.com", "password":"Imran@123", "mobile": 8767876574, "age":41},
    {"first_name":"Vinay", "email":"vinay@gmail.com", "password":"India123", "mobile": 8000987098, "age":35}
@@ -12,7 +13,8 @@ log = logging.getLogger(__name__)
 class ItemService:
     def createUser(self, signupDetails: SignupDetails):
         log.info(f'Adding user with email {signupDetails.email}')
-        mock_db.append(signup_request)
+        #convert pydantic model to dict and append to mock_db
+        mock_db.append(signupDetails.model_dump()) 
         log.info(f'Added user with email {signupDetails.email}')
 
     def getAllUsers(self):
@@ -23,7 +25,7 @@ class ItemService:
         log.info(f'Finding user by email {email}......')
 
         for user in mock_db:
-            if email.strip().upper() == user["email"].strip().upper():
+            if email.strip().upper() == user['email'].strip().upper():
                 log.info(f'User details fetched : {user}')
                 return user
 
@@ -37,7 +39,7 @@ class ItemService:
         # Find index of user
         user_found = False
         for index, user in enumerate(mock_db):
-            if user["email"] == email:
+            if user['email'] == email:
                 mock_db.pop(index)
                 user_found = True
                 break

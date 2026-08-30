@@ -18,5 +18,10 @@ CMD ["python", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
 
 #Build the image
 #docker build -t fastapi_demo:1.0.0 .
-#Runt the docker image
+#Run the docker image locally
 #docker run -d --name fastapi_demo_app -p 8000:80 fastapi_demo:1.0.0
+
+#Create tag
+#docker tag fastapi_demo:1.0.0 imrankhanin3/fastapi_demo:1.0.0
+#push the image to docker hub
+#docker push imrankhanin3/fastapi_demo:1.0.0
