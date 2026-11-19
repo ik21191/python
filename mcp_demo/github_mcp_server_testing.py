@@ -4,7 +4,7 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 # 1. PASTE YOUR GITHUB TOKEN HERE (or set it in your system env)
-GITHUB_TOKEN = "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" 
+GITHUB_TOKEN = "your_ghp_token_here"  # Replace with your actual GitHub Personal Access Token
 
 async def run_github_mcp_client():
     if GITHUB_TOKEN == "your_ghp_token_here":
